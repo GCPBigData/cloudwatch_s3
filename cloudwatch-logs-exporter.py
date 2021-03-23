@@ -1,36 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-.. module: Export Logs from cloudwatch & Store in given S3 Bucket
-    :platform: AWS
-    :copyright: (c) 2019 Mystique.,
-.. moduleauthor:: Mystique
-.. contactauthor:: miztiik@github issues
-"""
 
-#####################################################################################
-#                                                                                   #
-#               SOME REMINDERS - THINGS TO REMEMBER & FOLLOW                        #
-#                                                                                   #
-#####################################################################################
-"""
-- The Cloudwatch logs to be monitored should be in the lambda env variables and comma(,) separated.
--- The log group filter will match log group "as-is", i.e it is ASSUMED to be case sensitive,  So make sure the correct log group full names as it appears in the env variable. 
--- For example: "/aws/lambda/log-group-name". 
--- For multiple log groups: "/aws/lambda/lg1,/aws/lambda/lg2,/aws/lambda/lg3"
-- The S3 Bucket MUST be in the same region
-- The `retention_days` defaults to 90 days, Customize in `global_vars`
--- AWS CW Log exports doesn't effectively keep track of logs that are exported previously in a native way. 
--- To avoid exporting the same data twice, this script uses a timeframe of 24 hour period. This period is the 90th day in the past.
--- Run the script everyday to keep the log export everyday.
-----------------------|<------LOG EXPORT PERIOD------>|----------------------------------------|
-                    91stDay                        90thDay                                   Today
-- The default time for awaiting task completion is 5 Minutes(300 Seconds). Customize in `global_vars`
-- FROM AWS Docs,Export task:One active (running or pending) export task at a time, per account. This limit cannot be changed.
--- Ref[1] - https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/cloudwatch_limits_cwl.html
-- The lambda/python is written and tested for v3.7
-- Increase Lambde Timeout based on requirements.
-- Lambda IAM - Role: CloudWatch Access List/Read & S3 Bucket - HEAD, List, Put. I tested with slighly elevated S3 privileges, But should be able to tighten it.
-"""
 ########################################################
 #                                                      #
 #               S3 BUCKET POLICY JSON                  #
